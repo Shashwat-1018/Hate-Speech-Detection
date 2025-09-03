@@ -1,16 +1,13 @@
-# -*- coding: utf-8 -*-
+
 """
 Spyder Editor
 
 This is a temporary script file.
 """
 import numpy as np
-import pickle
+import joblib
 
-#loading
-loaded_model = pickle.load(open('C:/Users/shash/Desktop/Hate Speech Detection/hsd_model.sav', 'rb'))
-
-
+loaded_model = joblib.load("C:/Users/shash/Desktop/Hate Speech Detection/hsd_model.joblib")
 
 positive_words = {"love", "nice", "good", "happy", "great", "friend", "beautiful"}
 
