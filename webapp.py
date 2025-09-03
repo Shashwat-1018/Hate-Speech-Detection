@@ -1,16 +1,17 @@
-# app.py
-# -*- coding: utf-8 -*-
 
+import os
 import streamlit as st
-import pickle
+import joblib
 import pandas as pd
 
-# ---------- Load model ----------
-MODEL_PATH = "C:/Users/shash/Desktop/Hate Speech Detection/hsd_model.sav"
-with open(MODEL_PATH, "rb") as f:
-    loaded_model = pickle.load(f)
+# Get current directory of the script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "hsd_model.joblib")
 
-positive_words = {"love", "nice", "good", "happy", "great", "friend", "beautiful", "like", "family" , "ladies"}
+# Load model safely with joblib
+loaded_model = joblib.load(MODEL_PATH)
+
+positive_words = {"love", "nice", "good", "happy", "great", "friend", "beautiful", "like", "family", "ladies"}
 
 def custom_predict(text: str):
     base_pred = loaded_model.predict([text])[0]
@@ -24,17 +25,13 @@ def custom_predict(text: str):
 # ---------- Page setup ----------
 st.set_page_config(page_title="🛡️ Hate Speech Detector", page_icon="🛡️", layout="centered")
 
-# Optional: slightly lighter page bg so the box stands out
 st.markdown("""
 <style>
-/* limit overall content width */
 .main > div { max-width: 2600px; margin: 0 auto; }
-
-/* make the bordered container look like a card */
 div[data-testid="stVerticalBlock"][data-border="true"]{
     border: 6px solid #ffffff;
     border-radius: 14px;
-    background: #3a3a3a;
+    background: #D6ABD3;   /* soft pink background */
     padding: 24px;
     font-family: 'Segoe UI', sans-serif; 
 }
@@ -74,6 +71,8 @@ with col_center:
                 st.markdown("### 🔢 Confidence Scores:")
                 prob_df = pd.DataFrame(list(probabilities.items()), columns=["Class", "Confidence"])
                 prob_df["Confidence"] = prob_df["Confidence"].round(4)
+
+                # Custom bar chart with colors
                 st.bar_chart(prob_df.set_index("Class"))
 
                 with st.expander("🔎 Detailed Confidence Values"):
